@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "description": "The Beginning of the Journey",
+    "ongoing": "Speak to the village elder to learn about your destiny.",
+    "onfinished": "You have learned about the ancient prophecy. Your journey begins!",
+    "questgivers": [101],
+    "prerequisites": [],
+    "required": [
+      {
+        "id": 201,
+        "type": 4,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "description": "First Steps",
+    "ongoing": "Gather 5 herbs from the forest to help the healer.",
+    "onfinished": "The healer thanks you for the herbs and gives you a healing potion.",
+    "questgivers": [102],
+    "prerequisites": [1],
+    "required": [
+      {
+        "id": 301,
+        "type": 1,
+        "count": 5
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "description": "Proving Your Worth",
+    "ongoing": "Defeat 3 wolves that have been threatening the village.",
+    "onfinished": "The village is safe from wolves for now. The villagers respect your combat skills.",
+    "questgivers": [103],
+    "prerequisites": [1],
+    "required": [
+      {
+        "id": 401,
+        "type": 0,
+        "count": 3
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "description": "The Lost Artifact",
+    "ongoing": "Search for the artifact in the ancient ruins.",
+    "onfinished": "You have found the artifact! It glows with mysterious energy.",
+    "questgivers": [104],
+    "prerequisites": [2, 3],
+    "required": [
+      {
+        "id": 501,
+        "type": 3,
+        "count": 1
+      },
+      {
+        "id": 502,
+        "type": 1,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "description": "Breaking the Seal",
+    "ongoing": "Use the artifact to break the seal on the ancient door.",
+    "onfinished": "The door opens, revealing a passage to a hidden chamber.",
+    "questgivers": [105],
+    "prerequisites": [4],
+    "required": [
+      {
+        "id": 502,
+        "type": 2,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "description": "The Guardian's Challenge",
+    "ongoing": "Defeat the guardian of the hidden chamber.",
+    "onfinished": "The guardian acknowledges your strength and grants you passage.",
+    "questgivers": [106],
+    "prerequisites": [5],
+    "required": [
+      {
+        "id": 601,
+        "type": 0,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "description": "The Final Secret",
+    "ongoing": "Speak to the spirit of the ancient sage to learn the final secret.",
+    "onfinished": "You now know the truth about the prophecy and your role in it.",
+    "questgivers": [107],
+    "prerequisites": [6],
+    "required": [
+      {
+        "id": 701,
+        "type": 4,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "description": "Side Quest: The Farmer's Plight",
+    "ongoing": "Help the farmer by clearing pests from his fields.",
+    "onfinished": "The farmer is grateful and rewards you with fresh produce.",
+    "questgivers": [108],
+    "prerequisites": [1],
+    "required": [
+      {
+        "id": 801,
+        "type": 0,
+        "count": 10
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "description": "Side Quest: The Alchemist's Request",
+    "ongoing": "Gather rare mushrooms from the dark cave for the alchemist.",
+    "onfinished": "The alchemist uses the mushrooms to create a powerful potion for you.",
+    "questgivers": [109],
+    "prerequisites": [2],
+    "required": [
+      {
+        "id": 901,
+        "type": 1,
+        "count": 3
+      },
+      {
+        "id": 902,
+        "type": 3,
+        "count": 1
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "description": "The Ancient Conspiracy",
+    "ongoing": "Investigate the rumors of a cult operating in the city.",
+    "onfinished": "You have uncovered the conspiracy and gained valuable information.",
+    "questgivers": [110],
+    "prerequisites": [7, 9],
+    "required": [
+      {
+        "id": 1001,
+        "type": 4,
+        "count": 3
+      },
+      {
+        "id": 1002,
+        "type": 3,
+        "count": 2
+      }
+    ]
+  }
+]
