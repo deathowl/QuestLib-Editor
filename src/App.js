@@ -21,6 +21,7 @@ const QuestEditor = () => {
     questgivers: [],
     prerequisites: [],
     required: [],
+    pre_dialogue_lines: [],
   });
   const [newRequirement, setNewRequirement] = useState({
     id: "",
@@ -29,6 +30,7 @@ const QuestEditor = () => {
   });
   const [newPrerequisite, setNewPrerequisite] = useState("");
   const [newQuestgiver, setNewQuestgiver] = useState("");
+  const [newDialogueLine, setNewDialogueLine] = useState("");
   const [filename, setFilename] = useState("quests.json");
 
   const svgRef = useRef();
@@ -45,6 +47,7 @@ const QuestEditor = () => {
         questgivers: quest.questgivers || [],
         prerequisites: quest.prerequisites || [],
         required: quest.required || [],
+        pre_dialogue_lines: quest.pre_dialogue_lines || [],
       });
     } else {
       resetForm();
@@ -61,6 +64,7 @@ const QuestEditor = () => {
       questgivers: [],
       prerequisites: [],
       required: [],
+      pre_dialogue_lines: [],
     });
   };
 
@@ -127,7 +131,7 @@ const QuestEditor = () => {
     setQuestFormData({
       ...questFormData,
       prerequisites: questFormData.prerequisites.filter(
-        (id) => id !== prereqId
+        (id) => id !== prereqId,
       ),
     });
   };
@@ -152,6 +156,57 @@ const QuestEditor = () => {
     });
   };
 
+  // NEW FUNCTIONS FOR DIALOGUE LINES
+  const addDialogueLine = () => {
+    if (newDialogueLine.trim()) {
+      setQuestFormData({
+        ...questFormData,
+        pre_dialogue_lines: [
+          ...questFormData.pre_dialogue_lines,
+          newDialogueLine.trim(),
+        ],
+      });
+      setNewDialogueLine("");
+    }
+  };
+
+  const removeDialogueLine = (index) => {
+    const updatedLines = [...questFormData.pre_dialogue_lines];
+    updatedLines.splice(index, 1);
+    setQuestFormData({
+      ...questFormData,
+      pre_dialogue_lines: updatedLines,
+    });
+  };
+
+  const moveDialogueLineUp = (index) => {
+    if (index > 0) {
+      const updatedLines = [...questFormData.pre_dialogue_lines];
+      [updatedLines[index - 1], updatedLines[index]] = [
+        updatedLines[index],
+        updatedLines[index - 1],
+      ];
+      setQuestFormData({
+        ...questFormData,
+        pre_dialogue_lines: updatedLines,
+      });
+    }
+  };
+
+  const moveDialogueLineDown = (index) => {
+    if (index < questFormData.pre_dialogue_lines.length - 1) {
+      const updatedLines = [...questFormData.pre_dialogue_lines];
+      [updatedLines[index], updatedLines[index + 1]] = [
+        updatedLines[index + 1],
+        updatedLines[index],
+      ];
+      setQuestFormData({
+        ...questFormData,
+        pre_dialogue_lines: updatedLines,
+      });
+    }
+  };
+
   const saveQuest = () => {
     if (
       !questFormData.id ||
@@ -159,7 +214,7 @@ const QuestEditor = () => {
       !questFormData.required.length
     ) {
       alert(
-        "Please fill in required fields: ID, Description, and at least one Requirement"
+        "Please fill in required fields: ID, Description, and at least one Requirement",
       );
       return;
     }
@@ -188,7 +243,7 @@ const QuestEditor = () => {
         updatedQuests[i].prerequisites.includes(id)
       ) {
         updatedQuests[i].prerequisites = updatedQuests[i].prerequisites.filter(
-          (prereqId) => prereqId !== id
+          (prereqId) => prereqId !== id,
         );
       }
     }
@@ -205,7 +260,7 @@ const QuestEditor = () => {
   const clearEverything = () => {
     if (
       window.confirm(
-        "Are you sure you want to clear all quests? This cannot be undone."
+        "Are you sure you want to clear all quests? This cannot be undone.",
       )
     ) {
       setQuests([]);
@@ -318,7 +373,7 @@ const QuestEditor = () => {
         d3
           .forceLink(links)
           .id((d) => d.id)
-          .distance(100)
+          .distance(100),
       )
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(width / 2, height / 2))
@@ -372,7 +427,7 @@ const QuestEditor = () => {
           .drag()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended)
+          .on("end", dragended),
       );
 
     node.on("click", function (event, d) {
@@ -384,7 +439,7 @@ const QuestEditor = () => {
       .append("circle")
       .attr("r", 10)
       .attr("fill", (d) =>
-        selectedQuestId === d.id ? "#ff6347" : darkMode ? "#88d1c0" : "#69b3a2"
+        selectedQuestId === d.id ? "#ff6347" : darkMode ? "#88d1c0" : "#69b3a2",
       )
       .attr("class", "node-circle")
       .attr("data-id", (d) => d.id);
@@ -441,8 +496,8 @@ const QuestEditor = () => {
         return nodeId === selectedQuestId
           ? "#ff6347"
           : darkMode
-          ? "#88d1c0"
-          : "#69b3a2";
+            ? "#88d1c0"
+            : "#69b3a2";
       });
 
     d3.select(svgRef.current)
@@ -484,7 +539,7 @@ const QuestEditor = () => {
       setDarkMode(storedDarkMode === "true");
     } else {
       const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
       ).matches;
       setDarkMode(prefersDark);
     }
@@ -634,8 +689,8 @@ const QuestEditor = () => {
                         ? "bg-blue-800"
                         : "bg-blue-200"
                       : darkMode
-                      ? "bg-gray-700 hover:bg-gray-600"
-                      : "bg-white hover:bg-blue-100"
+                        ? "bg-gray-700 hover:bg-gray-600"
+                        : "bg-white hover:bg-blue-100"
                   }`}
                   onClick={() => selectQuest(quest.id)}
                 >
@@ -759,6 +814,104 @@ const QuestEditor = () => {
                 }`}
                 rows="2"
               />
+            </div>
+
+            <div>
+              <label
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
+              >
+                Pre-Dialogue Lines
+              </label>
+              <div className="flex space-x-2 mb-2">
+                <input
+                  type="text"
+                  value={newDialogueLine}
+                  onChange={(e) => setNewDialogueLine(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addDialogueLine();
+                    }
+                  }}
+                  className={`w-full p-2 border rounded ${
+                    darkMode
+                      ? "bg-gray-700 text-white border-gray-600"
+                      : "bg-white text-gray-900 border-gray-300"
+                  }`}
+                  placeholder="Enter dialogue line"
+                />
+                <button
+                  onClick={addDialogueLine}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Add
+                </button>
+              </div>
+
+              {questFormData.pre_dialogue_lines.length === 0 ? (
+                <p
+                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                >
+                  No dialogue lines added yet.
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {questFormData.pre_dialogue_lines.map((line, index) => (
+                    <div
+                      key={index}
+                      className={`${
+                        darkMode ? "bg-gray-700" : "bg-gray-200"
+                      } p-2 rounded flex items-center justify-between`}
+                    >
+                      <span className="flex-1 text-sm">
+                        {index + 1}. {line}
+                      </span>
+                      <div className="flex space-x-1 ml-2">
+                        <button
+                          onClick={() => moveDialogueLineUp(index)}
+                          disabled={index === 0}
+                          className={`px-2 py-1 rounded ${
+                            index === 0
+                              ? "opacity-50 cursor-not-allowed"
+                              : "hover:bg-gray-600"
+                          }`}
+                          title="Move up"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          onClick={() => moveDialogueLineDown(index)}
+                          disabled={
+                            index ===
+                            questFormData.pre_dialogue_lines.length - 1
+                          }
+                          className={`px-2 py-1 rounded ${
+                            index ===
+                            questFormData.pre_dialogue_lines.length - 1
+                              ? "opacity-50 cursor-not-allowed"
+                              : "hover:bg-gray-600"
+                          }`}
+                          title="Move down"
+                        >
+                          ↓
+                        </button>
+                        <button
+                          onClick={() => removeDialogueLine(index)}
+                          className={`px-2 py-1 rounded ${
+                            darkMode
+                              ? "text-red-400 hover:text-red-300"
+                              : "text-red-500 hover:text-red-700"
+                          }`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Quest givers section */}
