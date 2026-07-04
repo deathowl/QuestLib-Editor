@@ -22,6 +22,8 @@ const QuestEditor = () => {
     prerequisites: [],
     required: [],
     pre_dialogue_lines: [],
+    quest_rewards: [],
+    xp_reward: null,
   });
   const [newRequirement, setNewRequirement] = useState({
     id: "",
@@ -30,6 +32,7 @@ const QuestEditor = () => {
   });
   const [newPrerequisite, setNewPrerequisite] = useState("");
   const [newQuestgiver, setNewQuestgiver] = useState("");
+  const [newReward, setNewReward] = useState("");
   const [newDialogueLine, setNewDialogueLine] = useState("");
   const [filename, setFilename] = useState("quests.json");
 
@@ -48,6 +51,8 @@ const QuestEditor = () => {
         prerequisites: quest.prerequisites || [],
         required: quest.required || [],
         pre_dialogue_lines: quest.pre_dialogue_lines || [],
+        quest_rewards: quest.quest_rewards || [],
+        xp_reward: quest.xp_reward ?? null,
       });
     } else {
       resetForm();
@@ -65,6 +70,8 @@ const QuestEditor = () => {
       prerequisites: [],
       required: [],
       pre_dialogue_lines: [],
+      quest_rewards: [],
+      xp_reward: null,
     });
   };
 
@@ -77,7 +84,14 @@ const QuestEditor = () => {
     const { name, value } = e.target;
     setQuestFormData({
       ...questFormData,
-      [name]: name === "id" ? parseInt(value) : value,
+      [name]:
+        name === "id"
+          ? parseInt(value)
+          : name === "xp_reward"
+            ? value === ""
+              ? null
+              : parseInt(value)
+            : value,
     });
   };
 
@@ -153,6 +167,28 @@ const QuestEditor = () => {
     setQuestFormData({
       ...questFormData,
       questgivers: questFormData.questgivers.filter((id) => id !== giverId),
+    });
+  };
+
+  const addReward = () => {
+    if (
+      newReward &&
+      !questFormData.quest_rewards.includes(parseInt(newReward))
+    ) {
+      setQuestFormData({
+        ...questFormData,
+        quest_rewards: [...questFormData.quest_rewards, parseInt(newReward)],
+      });
+      setNewReward("");
+    }
+  };
+
+  const removeReward = (rewardId) => {
+    setQuestFormData({
+      ...questFormData,
+      quest_rewards: questFormData.quest_rewards.filter(
+        (id) => id !== rewardId,
+      ),
     });
   };
 
@@ -822,6 +858,29 @@ const QuestEditor = () => {
                   darkMode ? "text-gray-300" : "text-gray-700"
                 } mb-1`}
               >
+                XP Reward
+              </label>
+              <input
+                type="number"
+                name="xp_reward"
+                value={questFormData.xp_reward ?? ""}
+                onChange={handleInputChange}
+                className={`w-full p-2 border rounded ${
+                  darkMode
+                    ? "bg-gray-700 text-white border-gray-600"
+                    : "bg-white text-gray-900 border-gray-300"
+                }`}
+                placeholder="Optional XP amount"
+                min="0"
+              />
+            </div>
+
+            <div>
+              <label
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
+              >
                 Pre-Dialogue Lines
               </label>
               <div className="flex space-x-2 mb-2">
@@ -955,6 +1014,66 @@ const QuestEditor = () => {
                     <span>NPC ID: {giverId}</span>
                     <button
                       onClick={() => removeQuestgiver(giverId)}
+                      className={`${
+                        darkMode
+                          ? "text-red-400 hover:text-red-300"
+                          : "text-red-500 hover:text-red-700"
+                      }`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quest rewards section */}
+            <div>
+              <label
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
+              >
+                Quest Rewards
+              </label>
+              <div className="flex space-x-2 mb-2">
+                <input
+                  type="number"
+                  value={newReward}
+                  onChange={(e) => setNewReward(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addReward();
+                    }
+                  }}
+                  className={`w-full p-2 border rounded ${
+                    darkMode
+                      ? "bg-gray-700 text-white border-gray-600"
+                      : "bg-white text-gray-900 border-gray-300"
+                  }`}
+                  placeholder="Enter item ID"
+                  min="1"
+                />
+                <button
+                  onClick={addReward}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Add
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {questFormData.quest_rewards?.map((rewardId) => (
+                  <div
+                    key={rewardId}
+                    className={`${
+                      darkMode ? "bg-gray-700" : "bg-gray-200"
+                    } px-3 py-1 rounded flex items-center space-x-2`}
+                  >
+                    <span>Item ID: {rewardId}</span>
+                    <button
+                      onClick={() => removeReward(rewardId)}
                       className={`${
                         darkMode
                           ? "text-red-400 hover:text-red-300"
